@@ -1,7 +1,7 @@
 {
     "Name": "Simple Location Display",
     "Author": "Kkthnx",
-    "Version": "1.0.5",
+    "Version": "1.0.6",
     "Description": "Displays the location name (e.g., 'Test Farm', 'Pelican Town') as a fading HUD popup, with translations for raw names (e.g., 'Farm', 'Town'), minimal logging for unknown locations, and optional GenericModConfigMenu support for adjusting notification duration.",
     "UniqueID": "Kkthnx.SimpleLocationDisplay",
     "EntryDll": "SimpleLocationDisplay.dll",
