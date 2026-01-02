@@ -95,6 +95,7 @@ namespace SimpleLocationDisplay
             if (!_missingTranslations.ContainsKey(translationKey))
             {
                 _missingTranslations[translationKey] = fallback;
+                // _monitor.Log($"Missing translation key: '{translationKey}' (Raw Name: '{rawName}'). Using fallback: '{fallback}'", LogLevel.Info);
             }
 
             return fallback;
