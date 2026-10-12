@@ -19,7 +19,8 @@
 #   variable  NEXUS_FILE_ID   the main file's ID as the upload API names it (a number
 #                             found by listing the mod's files through the API, not
 #                             the number in the mod page's HTML)
-#   variable  NEXUS_MOD_ID    the mod's ID (33749)
+#   variable  NEXUS_MOD_ID    the mod's ID as the upload API names it (5596342420437;
+#                             33749 is the number in the page's URL)
 #
 # To test without uploading, run it by hand from the Actions tab with dry run on.
 name: Upload release files
