@@ -1,22 +1,26 @@
 # Simple Location Display
 
-A small popup in the bottom-left corner tells you where you are whenever you enter a new area. It uses the same box as the game's "It's getting late" message and fades out by itself.
+[![Latest release](https://img.shields.io/github/v/release/Kkthnx-Stardew/SimpleLocationDisplay?include_prereleases&sort=semver)](https://github.com/Kkthnx-Stardew/SimpleLocationDisplay/releases) [![Issues](https://img.shields.io/github/issues/Kkthnx-Stardew/SimpleLocationDisplay)](https://github.com/Kkthnx-Stardew/SimpleLocationDisplay/issues) [![License](https://img.shields.io/github/license/Kkthnx-Stardew/SimpleLocationDisplay)](LICENSE.txt) [![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://www.curseforge.com/stardewvalley/mods/simplelocationdisplay) [![Nexus Mods](https://img.shields.io/badge/Nexus_Mods-Download-blue)](https://www.nexusmods.com/stardewvalley/mods/33749)
 
-Download it from [CurseForge](https://www.curseforge.com/stardewvalley/mods/simplelocationdisplay) or [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/33749).
+A small popup in the bottom-left corner names each new area you enter. It uses the same box as the game's "It's getting late" message and fades out by itself.
+
+It takes its names from the game, so it follows your language setting, and it works with large location mods such as Stardew Valley Expanded, Ridgeside Village and East Scarp.
+
+## Download
+
+- [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/33749) has the stable releases.
+- [CurseForge](https://www.curseforge.com/stardewvalley/mods/simplelocationdisplay) has stable releases and betas.
+- [GitHub Releases](https://github.com/Kkthnx-Stardew/SimpleLocationDisplay/releases) has every release, betas included, with the changelog.
 
 ## What it shows
-
-The popup uses the game's own names, so it follows your language setting with no extra files:
 
 - Towns, shops, homes and other places with a name in the game data show that name.
 - Farm buildings show the building's name, such as "Deluxe Coop".
 - The Mines show "Mines" with "Level 12" on a second line. The Skull Cavern and the Volcano do the same, and the number matches the one the game draws in the top-left corner. Skull Cavern levels start again at 1 after level 120.
 - A few places the game never names, such as the Night Market, the Desert Festival and some Ginger Island rooms, use text the game already translates.
-- Locations added by other mods show the name the mod gave them. If a mod gave none, the popup tries the warp name from CJB Cheats Menu (when you have it), and after that a readable version of the internal name, for example `Custom_FrontierFarm_HiddenCave` becomes "Frontier Farm Hidden Cave".
+- Locations added by other mods show the name the mod gave them. If a mod gave none, the popup tries the warp name from CJB Cheats Menu (when you have it), and after that a readable version of the internal name. `Custom_FrontierFarm_HiddenCave` becomes "Frontier Farm Hidden Cave", and a character's name before a place word gets a possessive, so `Custom_MarnieShed` reads "Marnie's Shed".
 
-When the name has to be guessed from the internal name, a character's name before a place word gets a possessive, so `Custom_MarnieShed` reads "Marnie's Shed". The check uses the game's list of characters, including characters that mods add. Rooms with `WarpRoom` in the name, which mods use to park characters between schedule stops, get no popup unless something names them.
-
-A popup that would appear during a cutscene waits until the cutscene ends. The short-lived temporary locations the game uses for events, festivals and minigames never get one.
+A popup that would appear during a cutscene waits until the cutscene ends. Temporary locations used for events, festivals and minigames never get one, and neither do the `WarpRoom` rooms that mods use to park characters between schedule stops.
 
 ## Install
 
@@ -24,7 +28,11 @@ A popup that would appear during a cutscene waits until the cutscene ends. The s
 2. Unzip the download and put the `SimpleLocationDisplay` folder in `Stardew Valley/Mods`.
 3. Optional: install Generic Mod Config Menu to change settings in game.
 
-Needs Stardew Valley 1.6 or newer. It loaded without errors on Stardew Valley 1.6.15 with SMAPI 4.5.2.
+Needs Stardew Valley 1.6 or newer.
+
+### Updating from 1.x
+
+Replace the old `SimpleLocationDisplay` folder with the new one. Your `config.json` carries over and needs no edits. Two things look different in 2.0: Mines, Skull Cavern and Volcano popups put the level on a second line, and three translation keys that could no longer be reached were removed (`location.Temp`, `location.BathHouse_Entry`, `location.UndergroundMine`). The full list is in the [changelog](CHANGELOG.md).
 
 ## Settings
 
@@ -38,6 +46,12 @@ Open the config menu from the title screen or the game menu, or edit `config.jso
 | `ShowZeroAsL0` | `false` | Shows level 0 of a dungeon as "L0" instead of leaving the number off. |
 | `HiddenLocations` | empty | Places that never get a popup. In `config.json` this is a list such as `["Farm", "Pelican Town"]`; in the config menu it is a comma-separated box. Each entry is an internal location name or the text the popup would show, and case doesn't matter. |
 | `EnableDebugLogging` | `false` | Writes extra detail about each popup to the SMAPI log. |
+
+## Works with other mods
+
+I checked the popup in a save with Stardew Valley Expanded 1.15.11, Ridgeside Village 2.5.17 and East Scarp Remastered 3.0.9 loaded, on Stardew Valley 1.6.15 with SMAPI 4.5.2. The popup text was worked out for all 367 locations in that world with no errors. The three mods give most of their places a display name, which the popup uses, and cutscenes in them wait as described above.
+
+Generic Mod Config Menu and CJB Cheats Menu are optional. The mod's page in Generic Mod Config Menu was opened and built in that same test. Split-screen players each keep their own popup, but I haven't run a live multiplayer or split-screen session.
 
 ## For mod authors
 
@@ -71,7 +85,7 @@ When the popup has to fall back to a readable version of a raw name, it drops a 
 
 The mod ships a Spanish file and a file for each of the game's other languages. All of them carry the Skull Cavern name as the game writes it in that language. Everything else comes from the game, or falls back to English from `i18n/default.json`.
 
-To find places that fell back to a readable guess, play for a while and run `sld_dump_missing_translations` in the SMAPI console. It writes `i18n/missing.en.json` in the mod folder, with a key for each place. Copy the keys you want to name into `i18n/default.json` (or your language file) and send them to me.
+To find places that fell back to a readable guess, play for a while and run `sld_dump_missing_translations` in the SMAPI console. It writes `i18n/missing.en.json` in the mod folder, with a key for each place. Copy the keys you want to name into `i18n/default.json` (or your language file) and open a pull request or an issue with them.
 
 ## Console commands
 
@@ -80,40 +94,17 @@ To find places that fell back to a readable guess, play for a while and run `sld
 
 ## Troubleshooting
 
-If no popup appears, check that `EnableMod` is `true`, then look at the SMAPI console for errors. If a place shows a strange name, run `debug_location` while standing in it and include the line in your bug report, along with the SMAPI log from [smapi.io/log](https://smapi.io/log).
+If no popup appears, check that `EnableMod` is `true` and that the place isn't in `HiddenLocations`, then look at the SMAPI console for errors.
+
+To report a problem, [open an issue](https://github.com/Kkthnx-Stardew/SimpleLocationDisplay/issues/new/choose). Include a SMAPI log from [smapi.io/log](https://smapi.io/log) and, if a place shows a strange name, the line `debug_location` prints while you stand in it.
 
 ## Versioning
 
-Versions follow [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`. A patch release fixes bugs, a minor release adds features without breaking anything, and a major release changes something existing configs or content packs rely on. A released version is never changed; fixes ship as a new number. The version lives in the `Version` property of `SimpleLocationDisplay.csproj`, and the build copies it into the manifest. Changes are listed in [CHANGELOG.md](CHANGELOG.md).
+Versions follow [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`. A patch release fixes bugs, a minor release adds features without breaking anything, and a major release changes something existing configs, translations or content packs rely on. Pre-releases are labeled `-alpha.N`, `-beta.N` or `-rc.N`, in that order. A released version is never changed; fixes ship as a new number. Changes are listed in [CHANGELOG.md](CHANGELOG.md).
 
-## Building
+## Contributing
 
-You need the .NET SDK, Stardew Valley and SMAPI. The mod build package finds the game folder on its own and copies the built mod into `Mods`.
-
-```bash
-dotnet build SimpleLocationDisplay.sln -c Release
-dotnet test SimpleLocationDisplay.Tests
-```
-
-The release zip is written next to the built DLL in `SimpleLocationDisplay/bin/Release/net6.0`.
-
-## Releasing
-
-Set the version in `SimpleLocationDisplay.csproj`, then change that version's heading in `CHANGELOG.md` from "(not released)" to the release date and commit. Run the script from the repo root:
-
-```bash
-powershell -ExecutionPolicy Bypass -File tools/release.ps1            # dry run: checks, builds, tests, prints the plan
-powershell -ExecutionPolicy Bypass -File tools/release.ps1 -Publish   # tags, pushes, creates the GitHub release
-```
-
-The script stops if the tree is dirty, the tag already exists, the changelog has no entry for the version, the tests fail, or the `CF_API_KEY` secret is missing. It builds on your PC, because the build needs the game's files, and it uses your signed-in `gh` session to create the GitHub release with the zip attached.
-
-Publishing the release starts the `Upload release files` workflow in `.github/workflows/publish.yml`. It downloads the zip from the release and sends it to two places. To check the workflow without uploading, run it from the Actions tab with "dry run" on.
-
-- **CurseForge:** uploaded with `tools/upload-curseforge.ps1`, using the `CF_API_KEY` repository secret. A version with `-alpha.N`, `-beta.N` or `-rc.N` uploads as an alpha or beta.
-- **Nexus Mods:** uploaded with Nexus's official upload action, which adds the zip as a new version of the existing main file. Only full releases go to Nexus. It needs a secret and two variables under Settings, Secrets and variables, Actions, and is skipped until they exist: the secret `NEXUS_API_PERSONAL_KEY` (an API key from your Nexus account), and the variables `NEXUS_FILE_ID` (the main file's ID, shown under Advanced on the mod page's Files tab) and `NEXUS_MOD_ID` (33749).
-
-Nexus's upload API and its action are both in beta, so the action is pinned to an exact commit. The action uploads the file, the version and the changelog. Update the Nexus page description by hand from `docs/nexus-description.bbcode` when it changes.
+Bug reports, translations and pull requests are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) covers building, testing and how releases are made.
 
 ## License
 
