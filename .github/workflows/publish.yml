@@ -1,0 +1,139 @@
+# Uploads a published GitHub release to CurseForge and to Nexus Mods.
+#
+# Unlike a World of Warcraft addon, this mod can't be built on a GitHub runner:
+# the build needs the game's own files. So the build happens on your PC, and this
+# workflow only takes the zip that is already attached to the release.
+#
+#   powershell -ExecutionPolicy Bypass -File tools/release.ps1 -Publish
+#
+# That builds, tests, tags v<version>, pushes, and creates the GitHub release with
+# the zip attached. Publishing the release starts this workflow.
+#
+# CurseForge: the release type comes from the version. 2.1.0-beta.1 uploads as a
+# beta, -alpha.N as an alpha, anything else as a full release.
+#
+# Nexus Mods: only full releases are uploaded, so a beta never replaces the main
+# file. Nexus needs a secret and two variables, added by hand under Settings,
+# Secrets and variables, Actions. Until they exist the Nexus step is skipped.
+#   secret    NEXUSMODS_API_KEY   your Nexus Mods API key
+#   variable  NEXUSMODS_FILE_ID   the main file's ID (Files tab, Advanced)
+#   variable  NEXUSMODS_MOD_ID    the mod's ID (33749)
+#
+# To test without uploading, run it by hand from the Actions tab with dry run on.
+name: Upload release files
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to upload, such as v2.0.0"
+        required: true
+      dry_run:
+        description: "Check everything but do not upload"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    name: Upload the release zip
+    runs-on: ubuntu-latest
+
+    env:
+      # Added by hand under Settings, Secrets and variables, Actions.
+      CURSEFORGE_API_TOKEN: ${{ secrets.CF_API_KEY }}
+      # Provided by Actions automatically, nothing to add for this one.
+      GH_TOKEN: ${{ github.token }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+
+      - name: Work out the tag
+        id: tag
+        shell: bash
+        env:
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          tag="${EVENT_TAG:-$INPUT_TAG}"
+          if [ -z "$tag" ]; then
+            echo "No release tag found." >&2
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Download the release zip and notes
+        id: files
+        shell: bash
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          gh release download "$TAG" --pattern '*.zip' --dir dist --repo "$GITHUB_REPOSITORY"
+          gh release view "$TAG" --json body --jq .body --repo "$GITHUB_REPOSITORY" > notes.md
+          count=$(ls dist/*.zip | wc -l)
+          if [ "$count" -ne 1 ]; then
+            echo "Expected one zip on the release, found $count." >&2
+            exit 1
+          fi
+          echo "zip=$(ls dist/*.zip)" >> "$GITHUB_OUTPUT"
+          # Nexus shows the changelog as plain text, so drop the markdown marks
+          {
+            echo "text<<SLD_NOTES_END"
+            sed -e 's/^#\+ *//' -e 's/`//g' notes.md
+            echo "SLD_NOTES_END"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload to CurseForge
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+          ZIP: ${{ steps.files.outputs.zip }}
+        run: |
+          ./tools/upload-curseforge.ps1 -Zip $env:ZIP -Version $env:VERSION -NotesFile notes.md -DryRun:($env:DRY_RUN -eq 'true')
+
+      # Runs even if the CurseForge step failed, so one site being down does not block the other.
+      - name: Check the Nexus Mods settings
+        id: nexus
+        if: ${{ !cancelled() && steps.files.outcome == 'success' }}
+        shell: bash
+        env:
+          NEXUS_KEY: ${{ secrets.NEXUSMODS_API_KEY }}
+          FILE_ID: ${{ vars.NEXUSMODS_FILE_ID }}
+          MOD_ID: ${{ vars.NEXUSMODS_MOD_ID }}
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          if [ -z "$NEXUS_KEY" ] || [ -z "$FILE_ID" ] || [ -z "$MOD_ID" ]; then
+            echo "Nexus Mods is not set up yet (needs NEXUSMODS_API_KEY, NEXUSMODS_FILE_ID and NEXUSMODS_MOD_ID). Skipping."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          elif [[ "$VERSION" == *-* ]]; then
+            echo "$VERSION is a pre-release. Nexus Mods only gets full releases. Skipping."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          elif [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run: Nexus Mods would get $VERSION for mod $MOD_ID, file $FILE_ID."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Third-party and still in beta, so it is pinned to an exact commit (v1.0.0-beta.10).
+      - name: Upload to Nexus Mods
+        if: ${{ !cancelled() && steps.nexus.outputs.run == 'true' }}
+        uses: Nexus-Mods/upload-action@c96019556046053aa26044b44396cd38929daf23
+        with:
+          api_key: ${{ secrets.NEXUSMODS_API_KEY }}
+          file_id: ${{ vars.NEXUSMODS_FILE_ID }}
+          mod_id: ${{ vars.NEXUSMODS_MOD_ID }}
+          filename: ${{ steps.files.outputs.zip }}
+          version: ${{ steps.tag.outputs.version }}
+          display_name: Simple Location Display ${{ steps.tag.outputs.version }}
+          category: main
+          archive_existing_version: true
+          update_mod_version: true
+          changelog: ${{ steps.files.outputs.text }}

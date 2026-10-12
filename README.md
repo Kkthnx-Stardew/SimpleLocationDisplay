@@ -103,10 +103,17 @@ Set the version in `SimpleLocationDisplay.csproj`, then change that version's he
 
 ```bash
 powershell -ExecutionPolicy Bypass -File tools/release.ps1            # dry run: checks, builds, tests, prints the plan
-powershell -ExecutionPolicy Bypass -File tools/release.ps1 -Publish   # tags, pushes, creates the GitHub release, uploads to CurseForge
+powershell -ExecutionPolicy Bypass -File tools/release.ps1 -Publish   # tags, pushes, creates the GitHub release
 ```
 
-The script stops if the tree is dirty, the tag already exists, the changelog has no entry for the version, or the tests fail. It uploads to CurseForge only when the `CURSEFORGE_API_TOKEN` environment variable holds an upload token from your CurseForge account. The token is never written to the repo. The GitHub release uses your signed-in `gh` session.
+The script stops if the tree is dirty, the tag already exists, the changelog has no entry for the version, the tests fail, or the `CF_API_KEY` secret is missing. It builds on your PC, because the build needs the game's files, and it uses your signed-in `gh` session to create the GitHub release with the zip attached.
+
+Publishing the release starts the `Upload release files` workflow in `.github/workflows/publish.yml`. It downloads the zip from the release and sends it to two places. To check the workflow without uploading, run it from the Actions tab with "dry run" on.
+
+- **CurseForge:** uploaded with `tools/upload-curseforge.ps1`, using the `CF_API_KEY` repository secret. A version with `-alpha.N`, `-beta.N` or `-rc.N` uploads as an alpha or beta.
+- **Nexus Mods:** uploaded with Nexus's official upload action, which adds the zip as a new version of the existing main file. Only full releases go to Nexus. It needs a secret and two variables under Settings, Secrets and variables, Actions, and is skipped until they exist: the secret `NEXUSMODS_API_KEY` (an API key from your Nexus account), and the variables `NEXUSMODS_FILE_ID` (the main file's ID, shown under Advanced on the mod page's Files tab) and `NEXUSMODS_MOD_ID` (33749).
+
+Nexus's upload API and its action are both in beta, so the action is pinned to an exact commit. The action uploads the file, the version and the changelog. Update the Nexus page description by hand from `docs/nexus-description.bbcode` when it changes.
 
 ## License
 
