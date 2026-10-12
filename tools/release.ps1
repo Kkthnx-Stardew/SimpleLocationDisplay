@@ -12,7 +12,7 @@
 
     Publishing the release starts the "Upload release files" workflow, which uploads the zip to
     CurseForge with the CF_API_KEY repository secret and, once it is set up, to Nexus Mods with
-    NEXUSMODS_API_KEY. The mod can't be built on a GitHub runner, because the build needs the
+    NEXUS_API_PERSONAL_KEY. The mod can't be built on a GitHub runner, because the build needs the
     game's files, so this script does the build on your PC and the workflow only does the uploads.
 
     The version comes from <Version> in SimpleLocationDisplay/SimpleLocationDisplay.csproj.
@@ -116,12 +116,12 @@ if ($LASTEXITCODE -ne 0) { Fail 'gh is not signed in. Run "gh auth login" first.
 $secrets = & gh secret list --repo $repo 2>$null
 $variables = & gh variable list --repo $repo 2>$null
 $hasSecret = [bool]($secrets | Where-Object { $_ -match '^CF_API_KEY\s' })
-$nexusReady = [bool]($secrets | Where-Object { $_ -match '^NEXUSMODS_API_KEY\s' }) -and
-    [bool]($variables | Where-Object { $_ -match '^NEXUSMODS_FILE_ID\s' }) -and
-    [bool]($variables | Where-Object { $_ -match '^NEXUSMODS_MOD_ID\s' })
+$nexusReady = [bool]($secrets | Where-Object { $_ -match '^NEXUS_API_PERSONAL_KEY\s' }) -and
+    [bool]($variables | Where-Object { $_ -match '^NEXUS_FILE_ID\s' }) -and
+    [bool]($variables | Where-Object { $_ -match '^NEXUS_MOD_ID\s' })
 Write-Host "gh signed in."
 Write-Host "CF_API_KEY secret (CurseForge): $(if ($hasSecret) { 'found' } else { 'MISSING, the CurseForge upload will fail' })"
-Write-Host "Nexus Mods (NEXUSMODS_API_KEY, NEXUSMODS_FILE_ID, NEXUSMODS_MOD_ID): $(if ($nexusReady) { 'all found' } else { 'not set up, so Nexus will be skipped' })"
+Write-Host "Nexus Mods (NEXUS_API_PERSONAL_KEY, NEXUS_FILE_ID, NEXUS_MOD_ID): $(if ($nexusReady) { 'all found' } else { 'not set up, so Nexus will be skipped' })"
 
 # --- Publish ---------------------------------------------------------------------------------
 Step ($(if ($Publish) { 'Publishing' } else { 'Dry run: would publish' }))

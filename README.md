@@ -111,7 +111,7 @@ The script stops if the tree is dirty, the tag already exists, the changelog has
 Publishing the release starts the `Upload release files` workflow in `.github/workflows/publish.yml`. It downloads the zip from the release and sends it to two places. To check the workflow without uploading, run it from the Actions tab with "dry run" on.
 
 - **CurseForge:** uploaded with `tools/upload-curseforge.ps1`, using the `CF_API_KEY` repository secret. A version with `-alpha.N`, `-beta.N` or `-rc.N` uploads as an alpha or beta.
-- **Nexus Mods:** uploaded with Nexus's official upload action, which adds the zip as a new version of the existing main file. Only full releases go to Nexus. It needs a secret and two variables under Settings, Secrets and variables, Actions, and is skipped until they exist: the secret `NEXUSMODS_API_KEY` (an API key from your Nexus account), and the variables `NEXUSMODS_FILE_ID` (the main file's ID, shown under Advanced on the mod page's Files tab) and `NEXUSMODS_MOD_ID` (33749).
+- **Nexus Mods:** uploaded with Nexus's official upload action, which adds the zip as a new version of the existing main file. Only full releases go to Nexus. It needs a secret and two variables under Settings, Secrets and variables, Actions, and is skipped until they exist: the secret `NEXUS_API_PERSONAL_KEY` (an API key from your Nexus account), and the variables `NEXUS_FILE_ID` (the main file's ID, shown under Advanced on the mod page's Files tab) and `NEXUS_MOD_ID` (33749).
 
 Nexus's upload API and its action are both in beta, so the action is pinned to an exact commit. The action uploads the file, the version and the changelog. Update the Nexus page description by hand from `docs/nexus-description.bbcode` when it changes.
 

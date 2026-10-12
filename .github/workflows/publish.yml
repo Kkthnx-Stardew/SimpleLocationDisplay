@@ -15,9 +15,9 @@
 # Nexus Mods: only full releases are uploaded, so a beta never replaces the main
 # file. Nexus needs a secret and two variables, added by hand under Settings,
 # Secrets and variables, Actions. Until they exist the Nexus step is skipped.
-#   secret    NEXUSMODS_API_KEY   your Nexus Mods API key
-#   variable  NEXUSMODS_FILE_ID   the main file's ID (Files tab, Advanced)
-#   variable  NEXUSMODS_MOD_ID    the mod's ID (33749)
+#   secret    NEXUS_API_PERSONAL_KEY   your Nexus Mods API key
+#   variable  NEXUS_FILE_ID   the main file's ID (Files tab, Advanced)
+#   variable  NEXUS_MOD_ID    the mod's ID (33749)
 #
 # To test without uploading, run it by hand from the Actions tab with dry run on.
 name: Upload release files
@@ -104,13 +104,13 @@ jobs:
         if: ${{ !cancelled() && steps.files.outcome == 'success' }}
         shell: bash
         env:
-          NEXUS_KEY: ${{ secrets.NEXUSMODS_API_KEY }}
-          FILE_ID: ${{ vars.NEXUSMODS_FILE_ID }}
-          MOD_ID: ${{ vars.NEXUSMODS_MOD_ID }}
+          NEXUS_KEY: ${{ secrets.NEXUS_API_PERSONAL_KEY }}
+          FILE_ID: ${{ vars.NEXUS_FILE_ID }}
+          MOD_ID: ${{ vars.NEXUS_MOD_ID }}
           VERSION: ${{ steps.tag.outputs.version }}
         run: |
           if [ -z "$NEXUS_KEY" ] || [ -z "$FILE_ID" ] || [ -z "$MOD_ID" ]; then
-            echo "Nexus Mods is not set up yet (needs NEXUSMODS_API_KEY, NEXUSMODS_FILE_ID and NEXUSMODS_MOD_ID). Skipping."
+            echo "Nexus Mods is not set up yet (needs NEXUS_API_PERSONAL_KEY, NEXUS_FILE_ID and NEXUS_MOD_ID). Skipping."
             echo "run=false" >> "$GITHUB_OUTPUT"
           elif [[ "$VERSION" == *-* ]]; then
             echo "$VERSION is a pre-release. Nexus Mods only gets full releases. Skipping."
@@ -127,9 +127,9 @@ jobs:
         if: ${{ !cancelled() && steps.nexus.outputs.run == 'true' }}
         uses: Nexus-Mods/upload-action@c96019556046053aa26044b44396cd38929daf23
         with:
-          api_key: ${{ secrets.NEXUSMODS_API_KEY }}
-          file_id: ${{ vars.NEXUSMODS_FILE_ID }}
-          mod_id: ${{ vars.NEXUSMODS_MOD_ID }}
+          api_key: ${{ secrets.NEXUS_API_PERSONAL_KEY }}
+          file_id: ${{ vars.NEXUS_FILE_ID }}
+          mod_id: ${{ vars.NEXUS_MOD_ID }}
           filename: ${{ steps.files.outputs.zip }}
           version: ${{ steps.tag.outputs.version }}
           display_name: Simple Location Display ${{ steps.tag.outputs.version }}
