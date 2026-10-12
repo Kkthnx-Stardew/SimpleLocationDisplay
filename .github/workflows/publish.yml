@@ -16,7 +16,9 @@
 # file. Nexus needs a secret and two variables, added by hand under Settings,
 # Secrets and variables, Actions. Until they exist the Nexus step is skipped.
 #   secret    NEXUS_API_PERSONAL_KEY   your Nexus Mods API key
-#   variable  NEXUS_FILE_ID   the main file's ID (Files tab, Advanced)
+#   variable  NEXUS_FILE_ID   the main file's ID as the upload API names it (a number
+#                             found by listing the mod's files through the API, not
+#                             the number in the mod page's HTML)
 #   variable  NEXUS_MOD_ID    the mod's ID (33749)
 #
 # To test without uploading, run it by hand from the Actions tab with dry run on.
@@ -34,6 +36,10 @@ on:
         description: "Check everything but do not upload"
         type: boolean
         default: true
+      skip_curseforge:
+        description: "Skip CurseForge, to retry only Nexus Mods after a failure"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -91,6 +97,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Upload to CurseForge
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_curseforge) }}
         shell: pwsh
         env:
           VERSION: ${{ steps.tag.outputs.version }}
