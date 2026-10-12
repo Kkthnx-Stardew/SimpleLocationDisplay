@@ -2,10 +2,20 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
-## 1.2.0 (not released)
+## 2.0.0 (not released)
+
+This is a major release because some things translators and content packs may rely on changed. Nothing in `config.json` needs editing.
+
+### Breaking changes
+
+- Mine, Skull Cavern and Volcano popups read "Mines" with "Level 12" on a second line. Before, they read "Underground Mine L12", and the Skull Cavern showed an internal number.
+- These i18n keys are gone: `location.Temp`, `location.BathHouse_Entry` and `location.UndergroundMine`. The game's own names or the new level handling always win over them, so a translation of those keys no longer shows.
+- No popup appears in temporary event, festival and minigame locations, or in rooms with `WarpRoom` in the name. During a cutscene the popup waits until the cutscene ends.
+- The new `HiddenLocations` setting defaults to an empty list. You can add it to `config.json` by hand, or it is written when you save from the config menu.
 
 ### Added
 
+- A `HiddenLocations` setting, also in the config menu, for places that should never get a popup. Entries match the internal name or the text the popup shows.
 - An asset, `Mods/Kkthnx.SimpleLocationDisplay/Names`, that content packs can edit to name a location or hide its popup.
 - Mines, Skull Cavern and Volcano levels show the level number the game draws on screen, in the game's own language, with the level on a second line. The Quarry Mine and numbered cellars get proper names.
 - Vanilla places with no display name use text the game already translates: the Night Market, the Desert Festival, the Island farmhouse and farm cave, the Qi walnut room, the Field Office and the Pirate Cove. The Casino and the Skull Cavern entrance are named too.
@@ -24,7 +34,7 @@ Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 - Split-screen players each keep their own popup state.
 - The readable fallback drops a leading mod unique ID or `Custom_`, splits acronyms ("ARVHouse" becomes "ARV House") and uses invariant casing, which fixes a dotted capital I on Turkish systems.
 - The version is set once in `SimpleLocationDisplay.csproj` and copied into the manifest at build time.
-- The config menu text comes from a generated `I18n` class, so a misspelled key fails the build.
+- The config menu text comes from a generated `I18n` class, so a misspelled key fails the build. The duration shows in seconds.
 - `sld_dump_missing_translations` writes the file with SMAPI's JSON writer. `debug_location` also prints the building and whether the location is temporary.
 - The "Generic Mod Config Menu not found" message is a trace line, since the dependency is optional.
 - README rewritten to match the current behavior.
