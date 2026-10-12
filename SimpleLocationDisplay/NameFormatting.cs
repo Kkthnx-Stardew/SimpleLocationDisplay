@@ -105,7 +105,8 @@ namespace SimpleLocationDisplay
         /// <summary>Turn a raw internal name like <c>Custom_FrontierFarm_HiddenCave</c> into <c>Custom Frontier Farm Hidden Cave</c>.</summary>
         /// <param name="raw">The raw location name, without any GUID suffix.</param>
         /// <param name="showZeroLevel">Whether a trailing level of 0 is shown as "L0" instead of being dropped.</param>
-        public static string MakeHumanReadable(string raw, bool showZeroLevel)
+        /// <param name="isPersonName">Tells whether a word is a character's name, so "MarnieShed" can become "Marnie's Shed". Leave null to skip that.</param>
+        public static string MakeHumanReadable(string raw, bool showZeroLevel, Func<string, bool>? isPersonName = null)
         {
             // 1. Normalize "DeepDungeon10" -> "DeepDungeon L10", or "Cave1" -> "Cave 1"
             string text = TryFormatLevelSuffix(raw, showZeroLevel, out string leveled)
@@ -122,22 +123,64 @@ namespace SimpleLocationDisplay
             // 4. Collapse multiple spaces
             text = CollapseSpaces(text);
 
-            // 5. Title Case, keeping short all-caps words ("ARV") and words with digits ("2nd", "10A") as written.
-            // Invariant casing: the current culture would turn "i" into a dotted capital in Turkish.
-            TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
+            // 5. Drop a word repeated by a mod's label ("Ridgeside Ridgeside Village")
             var words = new List<string>();
             foreach (string word in text.Split(' '))
             {
-                // A mod's label often repeats the name that follows it ("Ridgeside Ridgeside Village")
                 if (words.Count > 0 && string.Equals(words[^1], word, StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                words.Add(IsAcronym(word) || word.Any(char.IsDigit)
-                    ? word
-                    : textInfo.ToTitleCase(word.ToLowerInvariant()));
+                words.Add(word);
+            }
+
+            // 6. Possessives: "Marnie Shed" -> "Marnie's Shed", "Gunthers Room" -> "Gunther's Room"
+            if (isPersonName != null)
+            {
+                for (int i = 0; i < words.Count - 1; i++)
+                {
+                    if (PlaceNouns.Contains(words[i + 1]))
+                        words[i] = MakePossessive(words[i], isPersonName);
+                }
+            }
+
+            // 7. Title Case, keeping short all-caps words ("ARV") and words with digits ("2nd", "10A") as written.
+            // Invariant casing: the current culture would turn "i" into a dotted capital in Turkish.
+            TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
+            for (int i = 0; i < words.Count; i++)
+            {
+                string word = words[i];
+                if (IsAcronym(word) || word.Any(char.IsDigit))
+                    continue;
+
+                // Keep an apostrophe-s we added lowercase ("Marnie's", not "Marnie'S")
+                int apostrophe = word.IndexOf('\'');
+                words[i] = apostrophe < 0
+                    ? textInfo.ToTitleCase(word.ToLowerInvariant())
+                    : textInfo.ToTitleCase(word.Substring(0, apostrophe).ToLowerInvariant()) + word.Substring(apostrophe).ToLowerInvariant();
             }
 
             return string.Join(' ', words);
+        }
+
+        // Words that name a place that belongs to someone: "Andy's House", "Lewis' Basement".
+        private static readonly HashSet<string> PlaceNouns = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "House", "Home", "Room", "Bedroom", "Shed", "Cellar", "Basement", "Garage", "Barn", "Cabin",
+            "Cottage", "Office", "Shop", "Store", "Hideaway", "Property", "Orchard", "Backyard", "Garden",
+            "Greenhouse", "Workshop", "Lab", "Hut", "Den", "Study", "Studio", "Farm", "Ranch", "Clinic", "Cave"
+        };
+
+        private static string MakePossessive(string word, Func<string, bool> isPersonName)
+        {
+            // "Lewis" -> "Lewis'", "Marnie" -> "Marnie's"
+            if (isPersonName(word))
+                return word.EndsWith("s", StringComparison.OrdinalIgnoreCase) ? word + "'" : word + "'s";
+
+            // "Gunthers" -> "Gunther's"
+            if (word.Length > 2 && word.EndsWith("s", StringComparison.OrdinalIgnoreCase) && isPersonName(word[..^1]))
+                return word[..^1] + "'s";
+
+            return word;
         }
 
         private static bool IsAcronym(string word)

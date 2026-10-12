@@ -10,6 +10,7 @@ Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 - Mines, Skull Cavern and Volcano levels show the level number the game draws on screen, in the game's own language, with the level on a second line. The Quarry Mine and numbered cellars get proper names.
 - Vanilla places with no display name use text the game already translates: the Night Market, the Desert Festival, the Island farmhouse and farm cave, the Qi walnut room, the Field Office and the Pirate Cove. The Casino and the Skull Cavern entrance are named too.
 - When CJB Cheats Menu is installed, its warp names are used for modded locations that have no display name.
+- A guessed name gets a possessive when a character's name comes before a place word: "Marnie's Shed", "Lewis' Basement". The game's character list is used, so mod characters count.
 - Farm building interiors take the building's name from the game, so modded buildings and every language work without extra files.
 - The Skull Cavern name in the game's other ten languages, copied from the game's own text.
 - Unit tests for the name logic.
@@ -17,6 +18,7 @@ Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 ### Changed
 
 - Popups no longer appear on top of cutscenes, which the game draws HUD messages over. A popup that would have shown during a cutscene shows when it ends. The temporary locations the game uses for events, festivals and minigames are skipped.
+- Rooms with `WarpRoom` in the name get no popup unless a mod or an override names them. Location mods use them to park characters, and a popup like "Alesia Warp Room" only adds noise.
 - A location with broken data from another mod logs one warning and still gets a popup, instead of an error on every visit.
 - Numbers in raw names are spaced out ("Bert House2nd Floor" becomes "Bert House 2nd Floor"), and a repeated word is dropped ("Ridgeside Ridgeside Village").
 - Split-screen players each keep their own popup state.

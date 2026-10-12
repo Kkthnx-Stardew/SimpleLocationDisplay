@@ -14,6 +14,8 @@ The popup uses the game's own names, so it follows your language setting with no
 - A few places the game never names, such as the Night Market, the Desert Festival and some Ginger Island rooms, use text the game already translates.
 - Locations added by other mods show the name the mod gave them. If a mod gave none, the popup tries the warp name from CJB Cheats Menu (when you have it), and after that a readable version of the internal name, for example `Custom_FrontierFarm_HiddenCave` becomes "Frontier Farm Hidden Cave".
 
+When the name has to be guessed from the internal name, a character's name before a place word gets a possessive, so `Custom_MarnieShed` reads "Marnie's Shed". The check uses the game's list of characters, including characters that mods add. Rooms with `WarpRoom` in the name, which mods use to park characters between schedule stops, get no popup unless something names them.
+
 A popup that would appear during a cutscene waits until the cutscene ends. The short-lived temporary locations the game uses for events, festivals and minigames never get one.
 
 ## Install

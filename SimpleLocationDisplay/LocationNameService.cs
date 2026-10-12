@@ -1,5 +1,6 @@
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.GameData.Characters;
 using StardewValley.Locations;
 using StardewValley.TokenizableStrings;
 using System.Collections.Generic;
@@ -146,8 +147,13 @@ namespace SimpleLocationDisplay
             if (warpName != null)
                 return warpName;
 
+            // Location mods keep rooms like "Custom_Alesia_WarpRoom" where NPCs wait between
+            // schedule stops. They have no name worth showing, so no popup unless something above named them.
+            if (baseName.Contains("WarpRoom", StringComparison.OrdinalIgnoreCase))
+                return null;
+
             // 7. Fallback: procedural generation (human readable), without any mod prefix
-            string fallback = NameFormatting.MakeHumanReadable(NameFormatting.StripModPrefix(baseName, _modIds), _config.ShowZeroAsL0);
+            string fallback = NameFormatting.MakeHumanReadable(NameFormatting.StripModPrefix(baseName, _modIds), _config.ShowZeroAsL0, IsCharacterName);
             TrackMissingTranslation(baseName, rawName, fallback);
 
             return fallback;
@@ -273,6 +279,25 @@ namespace SimpleLocationDisplay
 
             string text = TokenParser.ParseText(token);
             return string.IsNullOrWhiteSpace(text) ? null : text;
+        }
+
+        /// <summary>Whether a word is the ID of a character in the game or in a mod ("Marnie", "Olivia").</summary>
+        private static bool IsCharacterName(string word)
+        {
+            IDictionary<string, CharacterData>? characters = Game1.characterData;
+            if (characters == null)
+                return false;
+
+            if (characters.ContainsKey(word))
+                return true;
+
+            foreach (string id in characters.Keys)
+            {
+                if (id.Equals(word, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
         }
 
         private string? TryGetTranslation(string key)

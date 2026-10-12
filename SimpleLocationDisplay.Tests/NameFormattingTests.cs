@@ -153,6 +153,44 @@ namespace SimpleLocationDisplay.Tests
                 Assert.Equal(expected, NameFormatting.MakeHumanReadable(input, showZeroLevel: false));
             }
 
+            private static readonly HashSet<string> People = new(StringComparer.OrdinalIgnoreCase)
+            {
+                "Marnie", "Andy", "Lewis", "Sandy", "Gunther", "Hank", "Wizard", "Leo"
+            };
+
+            private static bool IsPerson(string word) => People.Contains(word);
+
+            [Theory]
+            [InlineData("MarnieShed", "Marnie's Shed")]
+            [InlineData("Custom_AndyHouse", "Custom Andy's House")]
+            [InlineData("LewisBasement", "Lewis' Basement")]
+            [InlineData("GunthersRoom", "Gunther's Room")]
+            [InlineData("HanksGarage", "Hank's Garage")]
+            [InlineData("SandyHouse", "Sandy's House")]
+            [InlineData("WizardBasement", "Wizard's Basement")]
+            public void Adds_a_possessive_when_a_character_name_is_followed_by_a_place_word(string input, string expected)
+            {
+                Assert.Equal(expected, NameFormatting.MakeHumanReadable(input, showZeroLevel: false, IsPerson));
+            }
+
+            [Theory]
+            [InlineData("AndyIsland")]       // not a place word
+            [InlineData("LeoTreeHouse")]     // the person is not right before a place word
+            [InlineData("WitchHut")]         // not a character
+            [InlineData("Ranch")]            // no person at all
+            public void Leaves_other_names_without_a_possessive(string input)
+            {
+                string without = NameFormatting.MakeHumanReadable(input, showZeroLevel: false);
+                Assert.Equal(without, NameFormatting.MakeHumanReadable(input, showZeroLevel: false, IsPerson));
+                Assert.DoesNotContain("'", without);
+            }
+
+            [Fact]
+            public void Skips_possessives_when_no_character_check_is_given()
+            {
+                Assert.Equal("Marnie Shed", NameFormatting.MakeHumanReadable("MarnieShed", showZeroLevel: false));
+            }
+
             [Fact]
             public void Title_cases_long_all_caps_words()
             {
