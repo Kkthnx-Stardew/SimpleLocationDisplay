@@ -2,6 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
+## 2.0.0-beta.1 (2026-10-12)
+
+A preview of 2.0.0, so the release path and the new behavior get a real test before the final release. It has every change listed under 2.0.0 below. The main ones:
+
+- Mines, Skull Cavern and Volcano popups show the level on a second line, in the game's language.
+- A `HiddenLocations` setting, and a `Names` asset that content packs can edit.
+- Popups wait for cutscenes to end and skip temporary and `WarpRoom` locations.
+- Better names for modded locations: mod prefixes dropped, possessives, and CJB Cheats Menu warp names.
+
+Read "Breaking changes" under 2.0.0 if you translate the mod or make a content pack for it. Please report problems with a SMAPI log.
+
 ## 2.0.0 (not released)
 
 This is a major release because some things translators and content packs may rely on changed. Nothing in `config.json` needs editing.
