@@ -94,6 +94,17 @@ dotnet test SimpleLocationDisplay.Tests
 
 The release zip is written next to the built DLL in `SimpleLocationDisplay/bin/Release/net6.0`.
 
+## Releasing
+
+Set the version in `SimpleLocationDisplay.csproj`, then change that version's heading in `CHANGELOG.md` from "(not released)" to the release date and commit. Run the script from the repo root:
+
+```bash
+powershell -ExecutionPolicy Bypass -File tools/release.ps1            # dry run: checks, builds, tests, prints the plan
+powershell -ExecutionPolicy Bypass -File tools/release.ps1 -Publish   # tags, pushes, creates the GitHub release, uploads to CurseForge
+```
+
+The script stops if the tree is dirty, the tag already exists, the changelog has no entry for the version, or the tests fail. It uploads to CurseForge only when the `CURSEFORGE_API_TOKEN` environment variable holds an upload token from your CurseForge account. The token is never written to the repo. The GitHub release uses your signed-in `gh` session.
+
 ## License
 
 MIT. See [LICENSE.txt](LICENSE.txt).
