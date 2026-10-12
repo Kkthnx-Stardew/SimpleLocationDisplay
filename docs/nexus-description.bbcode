@@ -25,6 +25,8 @@ A popup that would appear during a cutscene waits until the cutscene ends.
 [/list]
 Needs Stardew Valley 1.6 or newer.
 
+[b]Updating from 1.x:[/b] replace the old SimpleLocationDisplay folder with the new one. Your config.json carries over and needs no edits. Two things look different in 2.0: Mines, Skull Cavern and Volcano popups put the level on a second line, and three translation keys that could no longer be reached were removed (location.Temp, location.BathHouse_Entry, location.UndergroundMine). The full list is on the GitHub changelog.
+
 [line]
 
 [size=4][b]Settings[/b][/size]
@@ -41,7 +43,7 @@ Open the config menu from the title screen or the game menu, or edit config.json
 [line]
 
 [size=4][b]Location mods[/b][/size]
-I checked the popup against Stardew Valley Expanded, Ridgeside Village and East Scarp Remastered. All three give most of their places a display name, which the popup uses. For the rest it falls back to a readable name, so Custom_FrontierFarm_HiddenCave becomes "Frontier Farm Hidden Cave", and a character's name before a place word gets a possessive, so Custom_MarnieShed reads "Marnie's Shed". Rooms that mods use to park characters (names with WarpRoom in them) get no popup.
+I checked the popup in a save with Stardew Valley Expanded 1.15.11, Ridgeside Village 2.5.17 and East Scarp Remastered 3.0.9 loaded, on Stardew Valley 1.6.15 with SMAPI 4.5.2. The popup text was worked out for all 367 locations in that world with no errors. All three mods give most of their places a display name, which the popup uses, and cutscenes in them wait as described above. Generic Mod Config Menu and CJB Cheats Menu are optional. Split-screen players each keep their own popup, but I have not run a live multiplayer or split-screen session. For places without a name, the popup falls back to a readable name, so Custom_FrontierFarm_HiddenCave becomes "Frontier Farm Hidden Cave", and a character's name before a place word gets a possessive, so Custom_MarnieShed reads "Marnie's Shed". Rooms that mods use to park characters (names with WarpRoom in them) get no popup.
 
 [b]For mod authors:[/b] the best fix is to set DisplayName on your location in Data/Locations. If you cannot, edit the asset Mods/Kkthnx.SimpleLocationDisplay/Names with Content Patcher. The key is the location name and the value is the text. A blank value hides the popup for that location. The README on GitHub has an example.
 
