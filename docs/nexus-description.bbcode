@@ -1,0 +1,64 @@
+[size=5][b]Simple Location Display[/b][/size]
+
+A small popup in the bottom-left corner tells you where you are whenever you enter a new area. It uses the same box as the game's "It's getting late" message and fades out by itself.
+
+[line]
+
+[size=4][b]What it shows[/b][/size]
+The popup uses the game's own names, so it follows your language setting with no extra files.
+[list]
+[*]Towns, shops, homes and other places with a name in the game data show that name.
+[*]Farm buildings show the building's name, such as "Deluxe Coop".
+[*]The Mines show "Mines" with "Level 12" on a second line. The Skull Cavern and the Volcano do the same, and the number matches the one the game draws in the top-left corner.
+[*]A few places the game never names, such as the Night Market and some Ginger Island rooms, use text the game already translates.
+[*]Locations added by other mods show the name the mod gave them. If a mod gave none, the popup tries the warp name from CJB Cheats Menu (when you have it), and after that a readable version of the internal name.
+[/list]
+A popup that would appear during a cutscene waits until the cutscene ends.
+
+[line]
+
+[size=4][b]Install[/b][/size]
+[list=1]
+[*]Install SMAPI 4.2.1 or newer.
+[*]Unzip the download and put the SimpleLocationDisplay folder in Stardew Valley/Mods.
+[*]Optional: install Generic Mod Config Menu to change settings in game.
+[/list]
+Needs Stardew Valley 1.6 or newer.
+
+[line]
+
+[size=4][b]Settings[/b][/size]
+Open the config menu from the title screen or the game menu, or edit config.json in the mod folder.
+[list]
+[*][b]EnableMod[/b] (default true): turns the popups on or off.
+[*][b]NotificationDuration[/b] (default 3500): how long the popup stays, in milliseconds, between 1000 and 10000.
+[*][b]ShowOnSaveLoad[/b] (default true): also shows the popup for the place you start in when you load a save.
+[*][b]ShowZeroAsL0[/b] (default false): shows level 0 of a dungeon as "L0" instead of leaving the number off.
+[*][b]HiddenLocations[/b] (default empty): places that never get a popup. Use an internal location name or the text the popup shows. In the config menu it is a comma-separated box.
+[*][b]EnableDebugLogging[/b] (default false): writes extra detail about each popup to the SMAPI log.
+[/list]
+
+[line]
+
+[size=4][b]Location mods[/b][/size]
+I checked the popup against Stardew Valley Expanded, Ridgeside Village and East Scarp Remastered. All three give most of their places a display name, which the popup uses. For the rest it falls back to a readable name, so Custom_FrontierFarm_HiddenCave becomes "Frontier Farm Hidden Cave", and a character's name before a place word gets a possessive, so Custom_MarnieShed reads "Marnie's Shed". Rooms that mods use to park characters (names with WarpRoom in them) get no popup.
+
+[b]For mod authors:[/b] the best fix is to set DisplayName on your location in Data/Locations. If you cannot, edit the asset Mods/Kkthnx.SimpleLocationDisplay/Names with Content Patcher. The key is the location name and the value is the text. A blank value hides the popup for that location. The README on GitHub has an example.
+
+[line]
+
+[size=4][b]Translations[/b][/size]
+The mod carries a Spanish file and the Skull Cavern name for each of the game's other languages. Everything else comes from the game, or falls back to English. If a place shows a raw name, stand in it and type [b]debug_location[/b] in the SMAPI console, then post the line it prints.
+
+[line]
+
+[size=4][b]Reporting bugs[/b][/size]
+Post on the Bugs tab with a SMAPI log from smapi.io/log and the line that debug_location prints while you stand in the place. If you can, say whether it still happens with only SMAPI and this mod installed.
+
+[line]
+
+[size=4][b]Links[/b][/size]
+[url=https://github.com/Kkthnx-Stardew/SimpleLocationDisplay]Source and changelog on GitHub[/url]
+[url=https://www.curseforge.com/stardewvalley/mods/simplelocationdisplay]CurseForge[/url]
+
+MIT license.
