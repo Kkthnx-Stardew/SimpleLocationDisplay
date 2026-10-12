@@ -33,6 +33,8 @@
     "gmcm.duration.tooltip": "How long the location popup stays on screen (in milliseconds)",
     "gmcm.saveload.name": "Show on Save Load",
     "gmcm.saveload.tooltip": "Show the current location when you load a save, not only when warping",
+    "gmcm.hidden.name": "Hidden Locations",
+    "gmcm.hidden.tooltip": "Places that never get a popup, separated by commas. Use the name the popup shows or the internal name that the debug_location command prints. Leave empty to show every place.",
     "gmcm.debug.name": "Enable Debug Logging",
     "gmcm.debug.tooltip": "Enable verbose debug logging for this mod",
     "gmcm.zero.name": "Show Level 0 as 'L0'",

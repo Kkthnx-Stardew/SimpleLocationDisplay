@@ -125,8 +125,12 @@ namespace SimpleLocationDisplay
             if (key.Length > 0 && key == _lastLocationKey.Value)
                 return;
 
+            // Places the player chose to hide, by internal name
+            if (_config.IsHidden(key) || _config.IsHidden(NameFormatting.StripGuidSuffix(key)) || _config.IsHidden(location.Name))
+                return;
+
             string? locationName = GetLocationNameSafely(location, key);
-            if (string.IsNullOrWhiteSpace(locationName))
+            if (string.IsNullOrWhiteSpace(locationName) || _config.IsHidden(locationName))
                 return;
 
             ShowNotification(locationName);

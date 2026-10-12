@@ -19,8 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The string logic has no game dependencies, so the tests compile it directly. -->
+    <!-- These files have no game dependencies, so the tests compile them directly. -->
     <Compile Include="..\SimpleLocationDisplay\NameFormatting.cs" Link="NameFormatting.cs" />
+    <Compile Include="..\SimpleLocationDisplay\ModConfig.cs" Link="ModConfig.cs" />
   </ItemGroup>
 
 </Project>

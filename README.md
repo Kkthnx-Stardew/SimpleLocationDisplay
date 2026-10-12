@@ -36,6 +36,7 @@ Open the config menu from the title screen or the game menu, or edit `config.jso
 | `NotificationDuration` | `3500` | How long the popup stays, in milliseconds. Values are kept between 1000 and 10000. |
 | `ShowOnSaveLoad` | `true` | Also shows the popup for the place you start in when you load a save. |
 | `ShowZeroAsL0` | `false` | Shows level 0 of a dungeon as "L0" instead of leaving the number off. |
+| `HiddenLocations` | empty | Places that never get a popup. In `config.json` this is a list such as `["Farm", "Pelican Town"]`; in the config menu it is a comma-separated box. Each entry is an internal location name or the text the popup would show, and case doesn't matter. |
 | `EnableDebugLogging` | `false` | Writes extra detail about each popup to the SMAPI log. |
 
 ## For mod authors

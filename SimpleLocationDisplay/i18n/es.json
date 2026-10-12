@@ -30,6 +30,8 @@
     "gmcm.duration.tooltip": "Cuánto tiempo permanece el aviso en pantalla (en milisegundos)",
     "gmcm.saveload.name": "Mostrar al cargar partida",
     "gmcm.saveload.tooltip": "Mostrar la ubicación actual al cargar una partida, no solo al teletransportarte",
+    "gmcm.hidden.name": "Ubicaciones ocultas",
+    "gmcm.hidden.tooltip": "Lugares que nunca muestran aviso, separados por comas. Usa el nombre que muestra el aviso o el nombre interno que imprime el comando debug_location. Déjalo vacío para mostrar todos los lugares.",
     "gmcm.debug.name": "Registro de depuración",
     "gmcm.debug.tooltip": "Activar mensajes de depuración detallados",
     "gmcm.zero.name": "Mostrar nivel 0 como 'L0'",

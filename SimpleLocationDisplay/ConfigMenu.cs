@@ -22,6 +22,7 @@ namespace SimpleLocationDisplay
                     config.EnableDebugLogging = false;
                     config.ShowZeroAsL0 = false;
                     config.ShowOnSaveLoad = true;
+                    config.HiddenLocations = new List<string>();
                 },
                 save: () =>
                 {
@@ -53,7 +54,8 @@ namespace SimpleLocationDisplay
                 tooltip: () => I18n.Gmcm_Duration_Tooltip(),
                 min: 1000f,
                 max: 10000f,
-                interval: 500f
+                interval: 500f,
+                formatValue: milliseconds => $"{milliseconds / 1000f:0.0} s"
             );
 
             configMenuApi.AddBoolOption(
@@ -62,6 +64,14 @@ namespace SimpleLocationDisplay
                 tooltip: () => I18n.Gmcm_Saveload_Tooltip(),
                 getValue: () => config.ShowOnSaveLoad,
                 setValue: value => config.ShowOnSaveLoad = value
+            );
+
+            configMenuApi.AddTextOption(
+                mod: modEntry.ModManifest,
+                name: () => I18n.Gmcm_Hidden_Name(),
+                tooltip: () => I18n.Gmcm_Hidden_Tooltip(),
+                getValue: config.GetHiddenLocationsText,
+                setValue: config.SetHiddenLocations
             );
 
             configMenuApi.AddBoolOption(
