@@ -1,0 +1,38 @@
+# Runs the unit tests on every push to main and on every pull request.
+#
+# Only the tests run here. The mod itself can't be built on a GitHub runner, because the
+# build needs the game's own files. The tests project avoids that on purpose: it compiles
+# the two game-free source files (NameFormatting.cs and ModConfig.cs) directly, and it also
+# checks the shipped manifest and translation files.
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+# A newer push to the same branch makes the older run pointless.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Run the tests
+        run: dotnet test SimpleLocationDisplay.Tests/SimpleLocationDisplay.Tests.csproj --configuration Release --nologo
