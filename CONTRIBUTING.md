@@ -34,7 +34,7 @@ dotnet build SimpleLocationDisplay.sln -c Release
 dotnet test SimpleLocationDisplay.Tests
 ```
 
-The tests don't need the game. The release zip is written next to the built DLL in `SimpleLocationDisplay/bin/Release/net6.0`.
+The tests don't need the game, and they also run on GitHub for every push to `main` and every pull request. Besides the name logic, they check that every translation file is valid, has no blank values and only uses keys that `default.json` has, and that the manifest never asks for a game version older than 1.6.9. The release zip is written next to the built DLL in `SimpleLocationDisplay/bin/Release/net6.0`.
 
 ## Releasing
 

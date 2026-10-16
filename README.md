@@ -28,7 +28,7 @@ A popup that would appear during a cutscene waits until the cutscene ends. Tempo
 2. Unzip the download and put the `SimpleLocationDisplay` folder in `Stardew Valley/Mods`.
 3. Optional: install Generic Mod Config Menu to change settings in game.
 
-Needs Stardew Valley 1.6 or newer.
+Needs Stardew Valley 1.6.9 or newer.
 
 ### Updating from 1.x
 
@@ -83,7 +83,7 @@ When the popup has to fall back to a readable version of a raw name, it drops a 
 
 ## Translations
 
-The mod ships a Spanish file and a file for each of the game's other languages. All of them carry the Skull Cavern name as the game writes it in that language. Everything else comes from the game, or falls back to English from `i18n/default.json`.
+The mod ships a Spanish file and a file for each of the game's other languages. All of them carry the names of the Skull Cavern, the Cellar and the Quarry Mine, taken from the game's own text in that language. I checked the popup in all twelve languages in game. The Casino has no text in the game to take a word from, so it stays English until someone translates it. Everything else comes from the game, or falls back to English from `i18n/default.json`.
 
 To find places that fell back to a readable guess, play for a while and run `sld_dump_missing_translations` in the SMAPI console. It writes `i18n/missing.en.json` in the mod folder, with a key for each place. Copy the keys you want to name into `i18n/default.json` (or your language file) and open a pull request or an issue with them.
 
