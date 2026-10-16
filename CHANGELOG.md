@@ -2,7 +2,7 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
-## 2.0.1 (not released)
+## 2.0.1 (2026-10-16)
 
 ### Fixed
 
