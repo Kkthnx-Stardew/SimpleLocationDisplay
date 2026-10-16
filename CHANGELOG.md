@@ -2,6 +2,22 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
+## 2.0.1 (not released)
+
+### Fixed
+
+- The manifest and the README said Stardew Valley 1.6.0 or newer, but the mod calls `GameLocation.ParentBuilding` and a `LoadStringReturnNullIfNotFound` overload that were both added in 1.6.9. The minimum is now 1.6.9, so SMAPI says so on an older game instead of the mod failing when you warp.
+- The Cellar and Quarry Mine popups showed in English in every language. They now use the words from the game's own text in each of the ten languages that have a file, and in Spanish.
+
+### Added
+
+- Tests that check every translation file (valid, no blank values, only keys that `default.json` has) and the manifest.
+- The tests run on GitHub for every push to `main` and every pull request.
+
+### Changed
+
+- The upload workflow runs on Node 24 actions, which removes the warning GitHub showed about Node 20.
+
 ## 2.0.0 (2026-10-12)
 
 This is a major release because some things translators and content packs may rely on changed. Nothing in `config.json` needs editing.
