@@ -2,6 +2,12 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
+## 2.0.2 (2026-11-05)
+
+### Fixed
+
+- A typo in `config.json`, such as a missing comma, stopped the mod from loading at all. It now logs a warning, uses the default settings and leaves the file alone so it can be fixed.
+
 ## 2.0.1 (2026-10-16)
 
 ### Fixed
