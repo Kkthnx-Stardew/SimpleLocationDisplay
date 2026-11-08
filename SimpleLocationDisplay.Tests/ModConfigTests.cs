@@ -10,6 +10,9 @@ namespace SimpleLocationDisplay.Tests
             [InlineData(3500f, 3500f)]
             [InlineData(10001f, 10000f)]
             [InlineData(float.MaxValue, 10000f)]
+            [InlineData(float.NaN, 1000f)]
+            [InlineData(float.NegativeInfinity, 1000f)]
+            [InlineData(float.PositiveInfinity, 10000f)]
             public void Keeps_the_duration_in_the_menus_range(float input, float expected)
             {
                 var config = new ModConfig { NotificationDuration = input };

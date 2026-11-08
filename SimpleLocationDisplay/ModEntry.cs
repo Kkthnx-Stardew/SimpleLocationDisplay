@@ -23,8 +23,7 @@ namespace SimpleLocationDisplay
         {
             I18n.Init(helper.Translation);
 
-            _config = helper.ReadConfig<ModConfig>() ?? new ModConfig();
-            _config.Clamp();
+            _config = LoadConfig(helper);
             _warpNames = new CheatsMenuWarpNames(helper.GameContent, helper.ModRegistry, Monitor);
             _nameService = new LocationNameService(helper.Translation, helper.GameContent, _warpNames, _config, Monitor);
 
@@ -39,6 +38,24 @@ namespace SimpleLocationDisplay
 
             helper.ConsoleCommands.Add("debug_location", "Prints current location details for Simple Location Display.", OnDebugLocationCommand);
             helper.ConsoleCommands.Add("sld_dump_missing_translations", "Writes missing i18n keys to i18n/missing.en.json", (_, _) => _nameService.DumpMissingTranslations(Helper.Data));
+        }
+
+        /// <summary>Read config.json, or use the defaults if the file can't be parsed. The file is left as it is so the player can fix it.</summary>
+        private ModConfig LoadConfig(IModHelper helper)
+        {
+            ModConfig config;
+            try
+            {
+                config = helper.ReadConfig<ModConfig>() ?? new ModConfig();
+            }
+            catch (Exception ex)
+            {
+                Monitor.Log($"Couldn't read config.json, so the default settings are used until it is fixed. Check it for a missing comma or quote. Details: {ex.Message}", LogLevel.Warn);
+                config = new ModConfig();
+            }
+
+            config.Clamp();
+            return config;
         }
 
         private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)

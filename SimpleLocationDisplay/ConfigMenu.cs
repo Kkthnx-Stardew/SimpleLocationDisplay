@@ -17,12 +17,14 @@ namespace SimpleLocationDisplay
                 mod: modEntry.ModManifest,
                 reset: () =>
                 {
-                    config.EnableMod = true;
-                    config.NotificationDuration = 3500f;
-                    config.EnableDebugLogging = false;
-                    config.ShowZeroAsL0 = false;
-                    config.ShowOnSaveLoad = true;
-                    config.HiddenLocations = new List<string>();
+                    // Copy from a fresh config so the defaults live in one place
+                    var defaults = new ModConfig();
+                    config.EnableMod = defaults.EnableMod;
+                    config.NotificationDuration = defaults.NotificationDuration;
+                    config.EnableDebugLogging = defaults.EnableDebugLogging;
+                    config.ShowZeroAsL0 = defaults.ShowZeroAsL0;
+                    config.ShowOnSaveLoad = defaults.ShowOnSaveLoad;
+                    config.HiddenLocations = defaults.HiddenLocations;
                 },
                 save: () =>
                 {
@@ -52,8 +54,8 @@ namespace SimpleLocationDisplay
                 setValue: value => config.NotificationDuration = value,
                 name: () => I18n.Gmcm_Duration_Name(),
                 tooltip: () => I18n.Gmcm_Duration_Tooltip(),
-                min: 1000f,
-                max: 10000f,
+                min: ModConfig.MinDuration,
+                max: ModConfig.MaxDuration,
                 interval: 500f,
                 formatValue: milliseconds => $"{milliseconds / 1000f:0.0} s"
             );

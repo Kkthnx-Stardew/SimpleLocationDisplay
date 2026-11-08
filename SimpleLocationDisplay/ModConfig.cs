@@ -2,6 +2,10 @@ namespace SimpleLocationDisplay
 {
     public class ModConfig
     {
+        /// <summary>The shortest and longest popup time the config menu allows, in milliseconds.</summary>
+        public const float MinDuration = 1000f;
+        public const float MaxDuration = 10000f;
+
         public bool EnableMod { get; set; } = true;
         public float NotificationDuration { get; set; } = 3500f;
         public bool EnableDebugLogging { get; set; }
@@ -14,10 +18,11 @@ namespace SimpleLocationDisplay
         /// <summary>Keeps hand-edited values inside the range the config menu allows and tidies the hidden list.</summary>
         public void Clamp()
         {
-            if (NotificationDuration < 1000f)
-                NotificationDuration = 1000f;
-            else if (NotificationDuration > 10000f)
-                NotificationDuration = 10000f;
+            // Written so that NaN, which compares false to everything, also lands on the lower limit
+            if (!(NotificationDuration >= MinDuration))
+                NotificationDuration = MinDuration;
+            else if (NotificationDuration > MaxDuration)
+                NotificationDuration = MaxDuration;
 
             // A hand-edited file can hold null, blanks or padding
             HiddenLocations = (HiddenLocations ?? new List<string>())

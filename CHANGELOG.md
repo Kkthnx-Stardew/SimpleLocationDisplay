@@ -2,6 +2,17 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
+## 2.0.3 (not released)
+
+### Fixed
+
+- A typo in `config.json`, such as a missing comma, still stopped the mod from loading. The 2.0.2 notes said this was fixed, but the fix was not in that build. It is now. The mod logs a warning, uses the default settings and leaves the file alone so it can be fixed. I checked this in the game with a broken file on 2.0.2 and again on this build.
+- A popup time written as `NaN` in `config.json` is now treated as the shortest time instead of being kept.
+
+### Changed
+
+- The settings reset button and the duration limits now read the defaults and limits from one place, so they cannot drift apart from the config file.
+
 ## 2.0.2 (2026-11-05)
 
 ### Fixed

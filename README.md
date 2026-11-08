@@ -6,6 +6,20 @@ A small popup in the bottom-left corner names each new area you enter. It uses t
 
 It takes its names from the game, so it follows your language setting, and it works with large location mods such as Stardew Valley Expanded, Ridgeside Village and East Scarp.
 
+## Screenshots
+
+The popup sits in the bottom-left corner. These were taken at 2560 by 1440 with the game's own UI.
+
+![The popup in the Stardrop Saloon, Pelican Beach, the Mines and the Skull Cavern](docs/images/popups.png)
+
+![Stardrop Saloon](docs/images/saloon.png)
+
+![Pelican Beach](docs/images/beach.png)
+
+![Mines, level 10](docs/images/mines.png)
+
+![Skull Cavern, level 10](docs/images/skull-cavern.png)
+
 ## Download
 
 - [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/33749) has the stable releases.
