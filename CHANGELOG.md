@@ -2,6 +2,13 @@
 
 Versions follow [Semantic Versioning](https://semver.org/). Newest first.
 
+## 2.0.4 (2026-11-13)
+
+### Fixed
+
+- Some locations from Ridgeside Village, East Scarp and other location mods showed `(no translation:...)` as the popup text. That is the text the game uses when a mod points a location at a name that does not exist. The mod now skips it and uses the next name it can find, which ends at a readable version of the location's internal name, so `EastScarp_GoldenApplePeak` shows as a normal name instead of the placeholder.
+- The same placeholder from a name in the override file (`Mods/Kkthnx.SimpleLocationDisplay/Names`), a building name or a CJB Cheats Menu warp is skipped the same way. A blank entry in the override file still hides the popup on purpose.
+
 ## 2.0.3 (2026-11-08)
 
 ### Fixed

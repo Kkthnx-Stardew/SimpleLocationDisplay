@@ -35,6 +35,30 @@ namespace SimpleLocationDisplay.Tests
             }
         }
 
+        public class IsMissingTranslationText
+        {
+            [Theory]
+            [InlineData("(no translation:Custom_Garden.Name)")]
+            [InlineData("(no translation:EastScarp.Locations.GoldenApple Peak)")]
+            [InlineData("(NO TRANSLATION:Some.Key)")]
+            [InlineData("Entrance (no translation:Key)")]
+            public void Spots_the_placeholder_for_a_missing_translation(string text)
+            {
+                Assert.True(NameFormatting.IsMissingTranslationText(text));
+            }
+
+            [Theory]
+            [InlineData(null)]
+            [InlineData("")]
+            [InlineData("Cherry Orchard")]
+            [InlineData("Translation Station")]
+            [InlineData("No translation needed")]
+            public void Leaves_real_names_alone(string? text)
+            {
+                Assert.False(NameFormatting.IsMissingTranslationText(text));
+            }
+        }
+
         public class BuildTranslationKey
         {
             [Theory]

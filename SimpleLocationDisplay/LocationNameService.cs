@@ -101,8 +101,9 @@ namespace SimpleLocationDisplay
                 return overrideName;
 
             // 2. Priority: the game's own display name (Data/Locations, localized by the game)
+            // A mod whose display name key is missing leaves "(no translation:...)" here, so skip those.
             string? displayName = location.GetDisplayName();
-            if (!string.IsNullOrWhiteSpace(displayName))
+            if (!string.IsNullOrWhiteSpace(displayName) && !NameFormatting.IsMissingTranslationText(displayName))
                 return displayName;
 
             // 3. Building interiors use the building's name (Data/Buildings, localized by the game)
@@ -198,6 +199,12 @@ namespace SimpleLocationDisplay
                 return false;
 
             name = ParseToken(text);
+
+            // An entry with text that turns out to be a missing translation names nothing, so carry on with the other
+            // sources. A truly blank entry is different: it hides the popup on purpose.
+            if (name == null && !string.IsNullOrWhiteSpace(text))
+                return false;
+
             return true;
         }
 
@@ -278,7 +285,7 @@ namespace SimpleLocationDisplay
                 return null;
 
             string text = TokenParser.ParseText(token);
-            return string.IsNullOrWhiteSpace(text) ? null : text;
+            return string.IsNullOrWhiteSpace(text) || NameFormatting.IsMissingTranslationText(text) ? null : text;
         }
 
         /// <summary>Whether a word is the ID of a character in the game or in a mod ("Marnie", "Olivia").</summary>

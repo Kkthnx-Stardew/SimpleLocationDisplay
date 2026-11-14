@@ -12,6 +12,9 @@ namespace SimpleLocationDisplay
         // Content Patcher's older custom locations feature required this prefix.
         private const string LegacyPrefix = "Custom_";
 
+        // What SMAPI's Translation prints when the key is missing: "(no translation:key)".
+        private const string MissingTranslationMarker = "(no translation:";
+
         // Trailing GUID, optionally preceded by a separator (e.g. "Coop2_83827173-...").
         private static readonly Regex GuidSuffixRegex = new(
             @"[_-]?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -46,6 +49,16 @@ namespace SimpleLocationDisplay
             @"\s+",
             RegexOptions.Compiled
         );
+
+        /// <summary>
+        /// Whether text is the placeholder SMAPI and Content Patcher put in place of a translation that does not exist,
+        /// such as <c>(no translation:Custom_Garden.Name)</c>. A location mod with a broken display name key ends up with this
+        /// as its name, and it should never reach the player.
+        /// </summary>
+        public static bool IsMissingTranslationText(string? text)
+        {
+            return text != null && text.Contains(MissingTranslationMarker, StringComparison.OrdinalIgnoreCase);
+        }
 
         /// <summary>Remove a trailing GUID (and the separator before it) from a unique location name.</summary>
         /// <returns>The remaining name, or an empty string if the name was only a GUID.</returns>
